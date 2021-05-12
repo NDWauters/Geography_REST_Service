@@ -6,6 +6,9 @@ namespace BusinessLogicLayer.Interfaces
     public interface IContinentService
     {
         IEnumerable<ContinentViewModel> GetAllContinents();
-        ContinentViewModel GetContinent();
+        ContinentViewModel GetContinent(int id);
+        ContinentViewModel CreateContinent(ContinentModel cModel);
+        ContinentViewModel UpdateContinent(ContinentModel cModel);
+        void RemoveContinent(int id);
     }
 }

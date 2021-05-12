@@ -5,7 +5,10 @@ namespace BusinessLogicLayer.Interfaces
 {
     public interface ICityService
     {
-        IEnumerable<CityViewModel> GetAllRivers();
-        CityViewModel GetRiver();
+        IEnumerable<CityViewModel> GetAllCities();
+        CityViewModel GetCity(int id);
+        CityViewModel CreateCity(CityModel cModel);
+        CityViewModel UpdateCity(CityModel cModel);
+        void RemoveCity(int id);
     }
 }

@@ -1,6 +1,7 @@
 using BusinessLogicLayer.BusinessLogicServices;
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Context;
+using DataAccessLayer.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,10 @@ namespace Geography_REST_Service
             services.AddScoped<IContinentService, ContinentService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IRiverService, RiverService>();
+            services.AddScoped<RiverRepo>();
+            services.AddScoped<ContinentRepo>();
+            services.AddScoped<CountryRepo>();
+            services.AddScoped<CityRepo>();
             services.AddSingleton<GeographyContext>();
         }
 

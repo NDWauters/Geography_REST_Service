@@ -11,6 +11,6 @@ namespace BusinessLogicLayer.ViewModels.Continent
         public string Name { get; set; }
 
         [Required]
-        private IList<string> Countries { get; set; }
+        public IList<string> Countries { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.ViewModels.City;
 using BusinessLogicLayer.ViewModels.Continent;
 using BusinessLogicLayer.ViewModels.Country;
@@ -12,10 +13,20 @@ namespace Geography_REST_Service.Controllers
     public class ContinentController : ControllerBase
     {
         private readonly ILogger<ContinentController> _logger;
+        private readonly IContinentService _continentService;
+        private readonly ICountryService _countryService;
+        private readonly ICityService _cityService;
 
-        public ContinentController(ILogger<ContinentController> logger)
+        public ContinentController(
+            ILogger<ContinentController> logger, 
+            IContinentService continentService,
+            ICountryService countryService,
+            ICityService cityService)
         {
             _logger = logger;
+            _continentService = continentService;
+            _countryService = countryService;
+            _cityService = cityService;
         }
 
         #region CONTINENT

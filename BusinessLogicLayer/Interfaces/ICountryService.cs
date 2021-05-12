@@ -6,6 +6,9 @@ namespace BusinessLogicLayer.Interfaces
     public interface ICountryService
     {
         IEnumerable<CountryViewModel> GetAllCountries();
-        CountryViewModel GetCountry();
+        CountryViewModel GetCountry(int id);
+        CountryViewModel CreateCountry(CountryModel cModel);
+        CountryViewModel UpdateCountry(CountryModel cModel);
+        void RemoveCountry(int id);
     }
 }
