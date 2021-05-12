@@ -91,7 +91,9 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new CityException("UpdateCity: city already exists.");
             }
 
-            if (!_countryRepo.Exists(cModel.CountryID))
+            var country = _countryRepo.Get(cModel.CountryID);
+
+            if (country == null)
             {
                 throw new CityException("UpdateCity: country doesn't exist.");
             }
@@ -122,12 +124,17 @@ namespace BusinessLogicLayer.BusinessLogicServices
 
         public void RemoveCity(int id)
         {
-            if (!_cityRepo.Exists(id))
+            if (id <= 0)
             {
-                throw new CityException("RemoveCity: city doesn't exists.");
+                throw new CityException($"RemoveCity: {id} is an invalid ID.");
             }
 
             var city = _cityRepo.Get(id);
+
+            if (city == null)
+            {
+                throw new CityException("RemoveCity: city doesn't exists.");
+            }
 
             _cityRepo.Remove(id);
         }

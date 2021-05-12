@@ -9,5 +9,6 @@ namespace DataAccessLayer.Interfaces
         int Add(T model);
         void Remove(int id);
         void Update(T model);
+        bool Exists(string name);
     }
 }

@@ -102,12 +102,17 @@ namespace BusinessLogicLayer.BusinessLogicServices
 
         public void RemoveContinent(int id)
         {
-            if (!_continentRepo.Exists(id))
+            if (id <= 0)
             {
-                throw new ContinentException("RemoveContinent: Continent doesn't exists.");
+                throw new ContinentException($"RemoveContinent: {id} is an invalid ID.");
             }
 
             var continent = _continentRepo.Get(id);
+
+            if (continent == null)
+            {
+                throw new ContinentException("RemoveContinent: Continent doesn't exists.");
+            }
 
             if (continent.Countries.Count != 0)
             {

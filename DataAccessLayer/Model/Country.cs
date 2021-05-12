@@ -18,13 +18,14 @@ namespace DataAccessLayer.Model
             Rivers = new HashSet<River>();
         }
 
-        public Country(string name, int population, double surface, IList<City> cities, IList<River> rivers)
+        public Country(string name, int population, double surface, Continent continent, IList<City> cities, IList<River> rivers)
         {
             Name = name;
             Population = population;
             Surface = surface;
             Cities = cities;
             Rivers = rivers;
+            Continent = continent;
         }
 
         [Key] public int CountryID { get; set; }

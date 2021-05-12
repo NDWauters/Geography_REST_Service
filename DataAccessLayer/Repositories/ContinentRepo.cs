@@ -66,17 +66,5 @@ namespace DataAccessLayer.Repositories
 
             return false;
         }
-
-        public bool Exists(int id)
-        {
-            var continent = _db.Continents.FirstOrDefault(x => x.ContinentID == id);
-
-            if (continent != null)
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 }

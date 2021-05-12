@@ -74,17 +74,5 @@ namespace DataAccessLayer.Repositories
 
             return false;
         }
-
-        public bool Exists(int id)
-        {
-            var city = _db.Cities.FirstOrDefault(x => x.CityID == id);
-
-            if (city != null)
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 }

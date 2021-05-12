@@ -84,17 +84,5 @@ namespace DataAccessLayer.Repositories
 
             return false;
         }
-
-        public bool Exists(int id)
-        {
-            var country = _db.Countries.FirstOrDefault(x => x.CountryID == id);
-
-            if (country != null)
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 }

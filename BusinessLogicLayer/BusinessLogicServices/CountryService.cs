@@ -97,15 +97,17 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new CountryException("CreateCountry: Country already exists.");
             }
 
-            if (!_continentRepo.Exists(cModel.ContinentID))
+            var continent = _continentRepo.Get(cModel.ContinentID);
+
+            if (continent == null)
             {
-                throw new CountryException("CreateCountry: Continent doesn't exist.");
+                throw new CountryException("UpdateCountry: Continent doesn't exists.");
             }
 
             var cities = _cityRepo.GetAll(cModel.Cities).ToList();
             var rivers = _riverRepo.GetAll(cModel.Rivers).ToList();
 
-            var newID = _countryRepo.Add(new Country(cModel.Name, cModel.Population, cModel.Surface, cities, rivers));
+            var newID = _countryRepo.Add(new Country(cModel.Name, cModel.Population, cModel.Surface, continent, cities, rivers));
 
             return new CountryViewModel
             {
@@ -144,7 +146,9 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new CountryException("UpdateCountry: Country already exists.");
             }
 
-            if (!_continentRepo.Exists(cModel.ContinentID))
+            var continent = _continentRepo.Get(cModel.ContinentID);
+
+            if (continent == null)
             {
                 throw new CountryException("UpdateCountry: Continent doesn't exists.");
             }
@@ -180,12 +184,17 @@ namespace BusinessLogicLayer.BusinessLogicServices
 
         public void RemoveCountry(int id)
         {
-            if (!_countryRepo.Exists(id))
+            if (id <= 0)
             {
-                throw new CountryException("RemoveCountry: Country doesn't exists.");
+                throw new CountryException($"RemoveCountry: {id} is an invalid ID.");
             }
 
             var country = _countryRepo.Get(id);
+
+            if (country == null)
+            {
+                throw new CountryException("RemoveCountry: Country doesn't exists.");
+            }
 
             if (country.Cities.Count != 0)
             {
