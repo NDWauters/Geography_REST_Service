@@ -15,7 +15,7 @@ namespace BusinessLogicLayer.BusinessLogicServices
         private readonly ContinentRepo _continentRepo;
 
         public CityService(CityRepo cityRepo,
-            CountryRepo countryRepo, 
+            CountryRepo countryRepo,
             ContinentRepo continentRepo)
         {
             _cityRepo = cityRepo;
@@ -91,6 +91,14 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new CityException($"CreateCity: No country found with ID: {cModel.CountryID}");
             }
 
+            var popCities = (country.Cities.Sum(x => x.Population) + cModel.Population);
+
+            if (popCities > country.Population)
+            {
+                throw new CityException(
+                    "CreateCity: Population of cities combined in this country are bigger than the population of the country itself");
+            }
+
             var newID = _cityRepo.Add(new City(cModel.Name, cModel.Population, cModel.IsCapital, country));
 
             return new CityViewModel
@@ -120,6 +128,14 @@ namespace BusinessLogicLayer.BusinessLogicServices
             if (country == null)
             {
                 throw new CityException("UpdateCity: country doesn't exist.");
+            }
+
+            var popCities = (country.Cities.Sum(x => x.Population) + cModel.Population);
+
+            if (popCities > country.Population)
+            {
+                throw new CityException(
+                    "UpdateCity: Population of cities combined in this country are bigger than the population of the country itself");
             }
 
             var city = _cityRepo.Get(cModel.CityID);

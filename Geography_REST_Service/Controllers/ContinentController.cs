@@ -36,13 +36,17 @@ namespace Geography_REST_Service.Controllers
         [HttpGet]
         public IEnumerable<ContinentViewModel> GetAllContinents()
         {
+            _logger.LogInformation(1,
+                $"{DateTime.Now.ToShortDateString()} - GET - " +
+                $"{Url.Action("GetAllContinents", "Continent", new {}, Request.Scheme)}");
+
             var continents = _continentService.GetAllContinents().ToList();
 
             foreach (var continent in continents)
             {
                 continent.Countries = continent.Countries
                     .Select(x => Url.Action("GetCountry", "Continent", 
-                        new { continent.ContinentID, id = x }, 
+                        new { continent.ContinentID, countryID = x }, 
                         Request.Scheme))
                     .ToList();
 
@@ -59,6 +63,10 @@ namespace Geography_REST_Service.Controllers
         {
             try
             {
+                _logger.LogInformation(2,
+                    $"{DateTime.Now.ToShortDateString()} - GET - " +
+                    $"{Url.Action("GetContinent", "Continent", new { id }, Request.Scheme)}");
+
                 var continent = _continentService.GetContinent(id);
 
                 continent.ContinentID = Url.Action("GetContinent", "Continent", 
@@ -75,16 +83,22 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return NotFound(e.Message);
             }
             
         }
 
         [HttpPost]
-        public ActionResult<ContinentModel> Post([FromBody] ContinentModel continent)
+        public ActionResult<ContinentModel> PostContinent([FromBody] ContinentModel continent)
         {
             try
             {
+                _logger.LogInformation(3,
+                    $"{DateTime.Now.ToShortDateString()} - POST - " +
+                    $"{Url.Action("PostContinent", "Continent", new {}, Request.Scheme)}");
+
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
@@ -101,15 +115,21 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] ContinentModel continent)
+        public IActionResult PutContinent(int id, [FromBody] ContinentModel continent)
         {
             try
             {
+                _logger.LogInformation(4,
+                    $"{DateTime.Now.ToShortDateString()} - PUT - " +
+                    $"{Url.Action("PutContinent", "Continent", new { id }, Request.Scheme)}");
+
                 if (continent.ContinentID != id)
                 {
                     return BadRequest();
@@ -130,6 +150,8 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }
@@ -139,12 +161,18 @@ namespace Geography_REST_Service.Controllers
         {
             try
             {
+                _logger.LogInformation(5,
+                    $"{DateTime.Now.ToShortDateString()} - DELETE - " +
+                    $"{Url.Action("DeleteContinent", "Continent", new { id }, Request.Scheme)}");
+
                 _continentService.RemoveContinent(id);
 
                 return NoContent();
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }
@@ -156,20 +184,24 @@ namespace Geography_REST_Service.Controllers
         [HttpGet("{continentID}/Country")]
         public IEnumerable<CountryViewModel> GetAllCountries()
         {
+            _logger.LogInformation(1,
+                $"{DateTime.Now.ToShortDateString()} - GET - " +
+                $"{Url.Action("GetAllCountries", "Continent", new {}, Request.Scheme)}");
+
             var countries = _countryService.GetAllCountries().ToList();
 
             foreach (var country in countries)
             {
+                country.Cities = country.Cities
+                    .Select(x
+                        => Url.Action("GetCity", "Continent",
+                            new { country.ContinentID, country.CountryID, cityID = x },
+                            Request.Scheme))
+                    .ToList();
+
                 country.CountryID = Url.Action("GetCountry", "Continent", 
                     new { country.ContinentID, country.CountryID},
                     Request.Scheme);
-
-                country.Cities = country.Cities
-                    .Select(x 
-                        => Url.Action("GetCity", "Continent", 
-                            new { country.ContinentID, country.CountryID, cityID = x},
-                            Request.Scheme))
-                    .ToList();
 
                 country.Rivers = country.Rivers
                     .Select(x => Url.Action("GetRiver", "River",
@@ -186,6 +218,10 @@ namespace Geography_REST_Service.Controllers
         {
             try
             {
+                _logger.LogInformation(2,
+                    $"{DateTime.Now.ToShortDateString()} - GET - " +
+                    $"{Url.Action("GetCountry", "Continent", new { countryID }, Request.Scheme)}");
+
                 var country = _countryService.GetCountry(countryID);
 
                 country.CountryID = Url.Action("GetCountry", "Continent", 
@@ -208,15 +244,21 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return NotFound(e.Message);
             }
         }
         
         [HttpPost("{continentID}/Country")]
-        public ActionResult<CountryViewModel> Post(int continentID, [FromBody] CountryModel country)
+        public ActionResult<CountryViewModel> PostCountry(int continentID, [FromBody] CountryModel country)
         {
             try
             {
+                _logger.LogInformation(3,
+                    $"{DateTime.Now.ToShortDateString()} - POST - " +
+                    $"{Url.Action("PostCountry", "Continent", new { continentID }, Request.Scheme)}");
+
                 if (continentID != country.ContinentID)
                 {
                     return BadRequest();
@@ -239,15 +281,21 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }
         
         [HttpPut("{continentID}/Country/{countryID}")]
-        public IActionResult Put(int continentID, int countryID, [FromBody] CountryModel country)
+        public IActionResult PutCountry(int continentID, int countryID, [FromBody] CountryModel country)
         {
             try
             {
+                _logger.LogInformation(4,
+                    $"{DateTime.Now.ToShortDateString()} - PUT - " +
+                    $"{Url.Action("PutCountry", "Continent", new { continentID, countryID }, Request.Scheme)}");
+
                 if (country.CountryID != countryID)
                 {
                     return BadRequest();
@@ -271,6 +319,8 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }
@@ -280,12 +330,18 @@ namespace Geography_REST_Service.Controllers
         {
             try
             {
+                _logger.LogInformation(5,
+                    $"{DateTime.Now.ToShortDateString()} - DELETE - " +
+                    $"{Url.Action("DeleteCountry", "Continent", new { countryID }, Request.Scheme)}");
+
                 _countryService.RemoveCountry(countryID);
 
                 return NoContent();
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }
@@ -297,6 +353,10 @@ namespace Geography_REST_Service.Controllers
         [HttpGet("{continentID}/Country/{countryID}/City")]
         public IEnumerable<CityViewModel> GetAllCities(int continentID)
         {
+            _logger.LogInformation(1,
+                $"{DateTime.Now.ToShortDateString()} - GET - " +
+                $"{Url.Action("GetAllCities", "Continent", new { }, Request.Scheme)}");
+
             var cities = _cityService.GetAllCities().ToList();
 
             foreach (var city in cities)
@@ -318,6 +378,10 @@ namespace Geography_REST_Service.Controllers
         {
             try
             {
+                _logger.LogInformation(2,
+                    $"{DateTime.Now.ToShortDateString()} - GET - " +
+                    $"{Url.Action("GetCity", "Continent", new { continentID, countryID, cityID }, Request.Scheme)}");
+
                 var city = _cityService.GetCity(countryID, cityID);
 
                 city.CityID = Url.Action("GetCity", "Continent",
@@ -332,16 +396,22 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return NotFound(e.Message);
             }
             
         }
         
         [HttpPost("{continentID}/Country/{countryID}/City")]
-        public ActionResult<CityModel> Post(int continentID, int countryID, [FromBody] CityModel city)
+        public ActionResult<CityModel> PostCity(int continentID, int countryID, [FromBody] CityModel city)
         {
             try
             {
+                _logger.LogInformation(3,
+                    $"{DateTime.Now.ToShortDateString()} - POST - " +
+                    $"{Url.Action("PostCity", "Continent", new { continentID, countryID }, Request.Scheme)}");
+
                 if (countryID != city.CountryID)
                 {
                     return BadRequest();
@@ -368,15 +438,21 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }
         
         [HttpPut("{continentID}/Country/{countryID}/City/{cityID}")]
-        public IActionResult Put(int continentID, int countryID, int cityID, [FromBody] CityModel city)
+        public IActionResult PutCity(int continentID, int countryID, int cityID, [FromBody] CityModel city)
         {
             try
             {
+                _logger.LogInformation(4,
+                    $"{DateTime.Now.ToShortDateString()} - PUT - " +
+                    $"{Url.Action("PutCity", "Continent", new { continentID, countryID, cityID }, Request.Scheme)}");
+
                 if (city.CityID != cityID)
                 {
                     return BadRequest();
@@ -402,6 +478,8 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }
@@ -411,12 +489,18 @@ namespace Geography_REST_Service.Controllers
         {
             try
             {
+                _logger.LogInformation(5,
+                    $"{DateTime.Now.ToShortDateString()} - DELETE - " +
+                    $"{Url.Action("DeleteCity", "Continent", new { cityID }, Request.Scheme)}");
+
                 _cityService.RemoveCity(cityID);
 
                 return NoContent();
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }

@@ -29,6 +29,10 @@ namespace Geography_REST_Service.Controllers
         [HttpGet]
         public IEnumerable<RiverViewModel> GetAllRivers()
         {
+            _logger.LogInformation(
+                $"{DateTime.Now.ToShortDateString()} - GET - " +
+                $"{Url.Action("GetAllRivers", "River", new { }, Request.Scheme)}");
+
             var rivers = _riverService.GetAllRivers().ToList();
 
             foreach (var river in rivers)
@@ -61,6 +65,10 @@ namespace Geography_REST_Service.Controllers
         {
             try
             {
+                _logger.LogInformation(
+                    $"{DateTime.Now.ToShortDateString()} - GET - " +
+                    $"{Url.Action("GetRiver", "River", new { id }, Request.Scheme)}");
+
                 var river = _riverService.GetRiver(id);
 
                 river.RiverID = Url.Action("GetRiver", "River",
@@ -86,6 +94,8 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return NotFound(e.Message);
             }
             
@@ -96,6 +106,10 @@ namespace Geography_REST_Service.Controllers
         {
             try
             {
+                _logger.LogInformation(
+                    $"{DateTime.Now.ToShortDateString()} - POST - " +
+                    $"{Url.Action("Post", "River", new { }, Request.Scheme)}");
+
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
@@ -125,6 +139,8 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }
@@ -134,6 +150,10 @@ namespace Geography_REST_Service.Controllers
         {
             try
             {
+                _logger.LogInformation(
+                    $"{DateTime.Now.ToShortDateString()} - PUT - " +
+                    $"{Url.Action("Put", "River", new { id }, Request.Scheme)}");
+
                 if (river.RiverID != id)
                 {
                     return BadRequest();
@@ -167,6 +187,8 @@ namespace Geography_REST_Service.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }
@@ -176,12 +198,18 @@ namespace Geography_REST_Service.Controllers
         {
             try
             {
+                _logger.LogInformation(
+                    $"{DateTime.Now.ToShortDateString()} - DELETE - " +
+                    $"{Url.Action("DeleteRiver", "River", new { id }, Request.Scheme)}");
+
                 _riverService.RemoveRiver(id);
 
                 return NoContent();
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return BadRequest(e.Message);
             }
         }

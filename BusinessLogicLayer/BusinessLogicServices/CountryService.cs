@@ -119,8 +119,28 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 rivers = _riverRepo.GetAll(cModel.Rivers).ToList();
             }
 
-            if (cities.Count != 0 && rivers.Count != 0)
+            if (cities.Count != 0 && rivers.Count == 0)
             {
+                if (cities.Sum(x => x.Population) > cModel.Population)
+                {
+                    throw new CountryException(
+                        "CreateCountry: Population of cities combined in this country are bigger than the population of the country itself");
+                }
+
+                newID = _countryRepo.Add(new Country(cModel.Name, cModel.Population, cModel.Surface, continent, cities));
+            }
+            else if (cities.Count == 0 && rivers.Count != 0)
+            {
+                newID = _countryRepo.Add(new Country(cModel.Name, cModel.Population, cModel.Surface, continent, rivers));
+            }
+            else if (cities.Count != 0 && rivers.Count != 0)
+            {
+                if (cities.Sum(x => x.Population) > cModel.Population)
+                {
+                    throw new CountryException(
+                        "CreateCountry: Population of cities combined in this country are bigger than the population of the country itself");
+                }
+
                 newID = _countryRepo.Add(new Country(cModel.Name, cModel.Population, cModel.Surface, continent, cities, rivers));
             }
             else
@@ -180,6 +200,12 @@ namespace BusinessLogicLayer.BusinessLogicServices
             if (cModel.Cities != null)
             {
                 cities = _cityRepo.GetAll(cModel.Cities).ToList();
+
+                if (cities.Sum(x => x.Population) > cModel.Population)
+                {
+                    throw new CountryException(
+                        "UpdateCountry: Population of cities combined in this country are bigger than the population of the country itself");
+                }
             }
 
             if (cModel.Rivers != null)
