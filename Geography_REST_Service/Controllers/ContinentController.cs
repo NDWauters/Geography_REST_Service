@@ -10,6 +10,7 @@ using BusinessLogicLayer.ViewModels.Country;
 
 namespace Geography_REST_Service.Controllers
 {
+    //NOG BEKIJKEN: CONTROLE OP UNIEK ZIJN IN CREATE EN UPDATE
     [ApiController]
     [Route("api/[controller]")]
     public class ContinentController : ControllerBase
@@ -502,9 +503,13 @@ namespace Geography_REST_Service.Controllers
 
                 var updatedCity = _cityService.UpdateCity(city);
 
-                updatedCity.CityID = Url.Action("GetCity", "Continent", new { continentID, city.CountryID, city.CityID });
+                updatedCity.CityID = Url.Action("GetCity", "Continent", 
+                    new { continentID, city.CountryID, city.CityID },
+                    Request.Scheme);
 
-                updatedCity.CountryID = Url.Action("GetCountry", "Continent", new { continentID, city.CountryID });
+                updatedCity.CountryID = Url.Action("GetCountry", "Continent",
+                    new { continentID, city.CountryID },
+                    Request.Scheme);
 
                 return CreatedAtAction(nameof(GetCity), new { continentID, city.CountryID, city.CityID }, updatedCity);
             }
