@@ -8,12 +8,12 @@ namespace DataAccessLayer.Model
     {
         public City() { }
 
-        public City(string name, int population, bool isCapital, int countryID)
+        public City(string name, int population, bool isCapital, Country country)
         {
             Name = name;
             Population = population;
             IsCapital = isCapital;
-            CountryID = countryID;
+            Country = country;
         }
 
         [Key]

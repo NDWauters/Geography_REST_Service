@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace BusinessLogicLayer.ViewModels.Continent
 {
     public class ContinentViewModel
     {
         public string ContinentID { get; set; }
-
-        [Required]
+        
         public string Name { get; set; }
 
-        [Required]
-        public IList<string> Countries { get; set; }
+        public int Population { get; set; }
+
+        public IList<string> Countries { get; set; } = new List<string>();
     }
 }

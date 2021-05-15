@@ -16,16 +16,15 @@ namespace DataAccessLayer.Repositories
             _db = db;
         }
 
-        public IEnumerable<River> GetAll()
+        public IEnumerable<River> GetAll(IList<int> riverIds = null)
         {
-            return _db.Rivers.Include("Countries");
-        }
+            if (riverIds != null)
+            {
+                return _db.Rivers
+                    .Where(x => riverIds.Contains(x.RiverID));
+            }
 
-        public IEnumerable<River> GetAll(IList<int> riverIds)
-        {
-            return _db.Rivers
-                .Include("Countries")
-                .Where(x => riverIds.Contains(x.RiverID));
+            return _db.Rivers.Include("Countries");
         }
 
         public River Get(int id)

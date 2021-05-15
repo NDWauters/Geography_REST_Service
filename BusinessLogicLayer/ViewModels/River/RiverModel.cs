@@ -14,6 +14,7 @@ namespace BusinessLogicLayer.ViewModels.River
         [Required]
         public double Length { get; set; }
 
+        [Required]
         public IList<int> Countries { get; set; }
     }
 }

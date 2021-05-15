@@ -29,10 +29,12 @@ namespace Geography_REST_Service
             services.AddScoped<IContinentService, ContinentService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IRiverService, RiverService>();
+
             services.AddScoped<RiverRepo>();
             services.AddScoped<ContinentRepo>();
             services.AddScoped<CountryRepo>();
             services.AddScoped<CityRepo>();
+
             services.AddSingleton<GeographyContext>();
         }
 

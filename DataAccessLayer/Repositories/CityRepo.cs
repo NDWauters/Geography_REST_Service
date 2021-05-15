@@ -3,7 +3,6 @@ using System.Linq;
 using DataAccessLayer.Context;
 using DataAccessLayer.Interfaces;
 using DataAccessLayer.Model;
-using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Repositories
 {
@@ -15,22 +14,21 @@ namespace DataAccessLayer.Repositories
         {
             _db = db;
         }
-        public IEnumerable<City> GetAll()
-        {
-            return _db.Cities.Include("Countries");
-        }
 
-        public IEnumerable<City> GetAll(IList<int> cityIds)
+        public IEnumerable<City> GetAll(IList<int> cityIds = null)
         {
-            return _db.Cities
-                .Include("Countries")
-                .Where(x => cityIds.Contains(x.CityID));
+            if (cityIds != null)
+            {
+                return _db.Cities
+                    .Where(x => cityIds.Contains(x.CityID));
+            }
+
+            return _db.Cities;
         }
 
         public City Get(int id)
         {
             return _db.Cities
-                .Include("Countries")
                 .FirstOrDefault(x => x.CityID == id);
         }
 

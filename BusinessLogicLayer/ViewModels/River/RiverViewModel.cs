@@ -10,6 +10,6 @@ namespace BusinessLogicLayer.ViewModels.River
 
         public double Length { get; set; }
 
-        public IList<string> Countries { get; set; }
+        public IList<string> Countries { get; set; } = new List<string>();
     }
 }

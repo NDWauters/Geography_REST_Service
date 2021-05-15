@@ -16,27 +16,24 @@ namespace DataAccessLayer.Repositories
             _db = db;
         }
 
-        public IEnumerable<Country> GetAll()
+        public IEnumerable<Country> GetAll(IList<int> countryIds = null)
         {
+            if (countryIds != null)
+            {
+                return _db.Countries
+                    .Include("Cities")
+                    .Include("Rivers")
+                    .Where(x => countryIds.Contains(x.CountryID));
+            }
+
             return _db.Countries
-                .Include("Continents")
                 .Include("Cities")
                 .Include("Rivers");
-        }
-
-        public IEnumerable<Country> GetAll(IList<int> countryIds)
-        {
-            return _db.Countries
-                .Include("Continents")
-                .Include("Cities")
-                .Include("Rivers")
-                .Where(x => countryIds.Contains(x.CountryID));
         }
 
         public Country Get(int id)
         {
             return _db.Countries
-                .Include("Continents")
                 .Include("Cities")
                 .Include("Rivers")
                 .FirstOrDefault(x => x.CountryID == id);

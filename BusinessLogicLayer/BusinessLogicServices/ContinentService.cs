@@ -23,6 +23,7 @@ namespace BusinessLogicLayer.BusinessLogicServices
             {
                 ContinentID = x.ContinentID.ToString(),
                 Name = x.Name,
+                Population = x.Population,
                 Countries = x.Countries.Select(y => y.CountryID
                     .ToString())
                     .ToList()
@@ -46,6 +47,7 @@ namespace BusinessLogicLayer.BusinessLogicServices
             return new ContinentViewModel
             {
                 Name = continent.Name,
+                Population = continent.Population,
                 Countries = continent.Countries
                     .Select(x => x.CountryID.ToString())
                     .ToList()
@@ -76,11 +78,6 @@ namespace BusinessLogicLayer.BusinessLogicServices
             if (cModel.ContinentID <= 0)
             {
                 throw new ContinentException($"UpdateContinent: {cModel.ContinentID} is an invalid ID.");
-            }
-
-            if (_continentRepo.Exists(cModel.Name))
-            {
-                throw new ContinentException("UpdateContinent: Continent already exists.");
             }
 
             var continent = _continentRepo.Get(cModel.ContinentID);

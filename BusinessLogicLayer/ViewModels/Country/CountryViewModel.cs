@@ -15,7 +15,7 @@ namespace BusinessLogicLayer.ViewModels.Country
         
         public string ContinentID { get; set; }
 
-        public IList<string> Cities { get; set; }
-        public IList<string> Rivers { get; set; }
+        public IList<string> Cities { get; set; } = new List<string>();
+        public IList<string> Rivers { get; set; } = new List<string>();
     }
 }

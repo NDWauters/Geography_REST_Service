@@ -64,9 +64,14 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new RiverException("CreateRiver: river already exists.");
             }
 
-            var countries = _countryRepo.GetAll(rModel.Countries).ToList();
+            var checkCountries = CheckCountries(rModel.Countries);
 
-            var newID = _riverRepo.Add(new River(rModel.Name, rModel.Length, countries));
+            if (!string.IsNullOrEmpty(checkCountries.Item1) && checkCountries.Item2 == null)
+            {
+                throw new RiverException($"CreateRiver: {checkCountries.Item1}");
+            }
+
+            var newID = _riverRepo.Add(new River(rModel.Name, rModel.Length, checkCountries.Item2));
 
             return new RiverViewModel
             {
@@ -83,11 +88,6 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new RiverException($"UpdateRiver: {rModel.RiverID} is an invalid ID.");
             }
 
-            if (_riverRepo.Exists(rModel.Name))
-            {
-                throw new RiverException("UpdateRiver: river already exists.");
-            }
-
             var river = _riverRepo.Get(rModel.RiverID);
 
             if (river == null)
@@ -95,11 +95,16 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new RiverException($"UpdateRiver: No river found with ID: {rModel.RiverID}.");
             }
 
-            var countries = _countryRepo.GetAll(rModel.Countries).ToList();
+            var checkCountries = CheckCountries(rModel.Countries);
+
+            if (!string.IsNullOrEmpty(checkCountries.Item1) && checkCountries.Item2 == null)
+            {
+                throw new RiverException($"UpdateRiver: {checkCountries.Item1}");
+            }
 
             river.Name = rModel.Name;
             river.Length = rModel.Length;
-            river.Countries = countries;
+            river.Countries = checkCountries.Item2;
 
             _riverRepo.Update(river);
 
@@ -126,6 +131,44 @@ namespace BusinessLogicLayer.BusinessLogicServices
             }
 
             _riverRepo.Remove(id);
+        }
+
+        public (string, IList<Country>) CheckCountries(IList<int> countryIds)
+        {
+            string errorMessage;
+
+            if (countryIds == null || countryIds.Count == 0)
+            {
+                errorMessage = "A river needs to be located in at least 1 country.";
+
+                return (errorMessage, null);
+            }
+
+            bool allCountriesExist = true;
+            IList<Country> countries = new List<Country>();
+
+            foreach (var countryID in countryIds)
+            {
+                var country = _countryRepo.Get(countryID);
+
+                if (country == null)
+                {
+                    allCountriesExist = false;
+                }
+                else
+                {
+                    countries.Add(country);
+                }
+            }
+
+            if (!allCountriesExist)
+            {
+                errorMessage = "Not all given countries exist.";
+
+                return (errorMessage, null);
+            }
+
+            return (null, countries);
         }
     }
 }

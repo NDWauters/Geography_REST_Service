@@ -16,8 +16,15 @@ namespace DataAccessLayer.Repositories
             _db = db;
         }
 
-        public IEnumerable<Continent> GetAll()
+        public IEnumerable<Continent> GetAll(IList<int> continentIDs = null)
         {
+            if (continentIDs != null)
+            {
+                return _db.Continents
+                    .Include("Countries")
+                    .Where(x => continentIDs.Contains(x.ContinentID));
+            }
+
             return _db.Continents.Include("Countries");
         }
 

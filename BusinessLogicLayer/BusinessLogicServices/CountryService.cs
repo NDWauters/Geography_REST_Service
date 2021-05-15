@@ -29,34 +29,35 @@ namespace BusinessLogicLayer.BusinessLogicServices
 
         public IEnumerable<CountryViewModel> GetAllCountries()
         {
-            return _countryRepo.GetAll().Select(x => new CountryViewModel
-            {
-                CountryID = x.CountryID.ToString(),
-                Name = x.Name,
-                Population = x.Population,
-                Surface = x.Surface,
-                ContinentID = x.ContinentID.ToString(),
-                Cities = x.Cities
-                    .Select(y => y.CityID.ToString())
-                    .ToList(),
-                Rivers = x.Rivers
-                    .Select(y => y.RiverID.ToString())
-                    .ToList()
-            });
+            return _countryRepo.GetAll()
+                .Select(x => new CountryViewModel
+                {
+                    CountryID = x.CountryID.ToString(),
+                    Name = x.Name,
+                    Population = x.Population,
+                    Surface = x.Surface,
+                    ContinentID = x.ContinentID.ToString(),
+                    Cities = x.Cities
+                        .Select(y => y.CityID.ToString())
+                        .ToList(),
+                    Rivers = x.Rivers
+                        .Select(y => y.RiverID.ToString())
+                        .ToList()
+                });
         }
 
-        public CountryViewModel GetCountry(int id)
+        public CountryViewModel GetCountry(int countryID)
         {
-            if (id <= 0)
+            if (countryID <= 0)
             {
-                throw new CountryException($"GetCountry: {id} is an invalid ID.");
+                throw new CountryException($"GetCountry - country: {countryID} is an invalid ID.");
             }
 
-            var country = _countryRepo.Get(id);
+            var country = _countryRepo.Get(countryID);
 
             if (country == null)
             {
-                throw new CountryException($"GetCountry: No country found with ID: {id}.");
+                throw new CountryException($"GetCountry: No country found with ID: {countryID}.");
             }
 
             return new CountryViewModel
@@ -104,10 +105,28 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new CountryException("UpdateCountry: Continent doesn't exists.");
             }
 
-            var cities = _cityRepo.GetAll(cModel.Cities).ToList();
-            var rivers = _riverRepo.GetAll(cModel.Rivers).ToList();
+            IList<City> cities = new List<City>();
+            IList<River> rivers = new List<River>();
+            int newID;
 
-            var newID = _countryRepo.Add(new Country(cModel.Name, cModel.Population, cModel.Surface, continent, cities, rivers));
+            if (cModel.Cities != null)
+            {
+                cities = _cityRepo.GetAll(cModel.Cities).ToList();
+            }
+
+            if (cModel.Rivers != null)
+            {
+                rivers = _riverRepo.GetAll(cModel.Rivers).ToList();
+            }
+
+            if (cities.Count != 0 && rivers.Count != 0)
+            {
+                newID = _countryRepo.Add(new Country(cModel.Name, cModel.Population, cModel.Surface, continent, cities, rivers));
+            }
+            else
+            {
+                newID = _countryRepo.Add(new Country(cModel.Name, cModel.Population, cModel.Surface, continent));
+            }
 
             return new CountryViewModel
             {
@@ -141,11 +160,6 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new CountryException("UpdateCountry: population of country is null or lower.");
             }
 
-            if (_countryRepo.Exists(cModel.Name))
-            {
-                throw new CountryException("UpdateCountry: Country already exists.");
-            }
-
             var continent = _continentRepo.Get(cModel.ContinentID);
 
             if (continent == null)
@@ -160,8 +174,18 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new CountryException($"UpdateCountry: No country found with ID: {cModel.CountryID}.");
             }
 
-            var cities = _cityRepo.GetAll(cModel.Cities).ToList();
-            var rivers = _riverRepo.GetAll(cModel.Rivers).ToList();
+            IList<City> cities = new List<City>();
+            IList<River> rivers = new List<River>();
+
+            if (cModel.Cities != null)
+            {
+                cities = _cityRepo.GetAll(cModel.Cities).ToList();
+            }
+
+            if (cModel.Rivers != null)
+            {
+                rivers = _riverRepo.GetAll(cModel.Rivers).ToList();
+            }
 
             country.Name = cModel.Name;
             country.ContinentID = cModel.ContinentID;

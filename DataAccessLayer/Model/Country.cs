@@ -9,11 +9,12 @@ namespace DataAccessLayer.Model
     {
         public Country() { }
 
-        public Country(string name, int population, double surface)
+        public Country(string name, int population, double surface, Continent continent)
         {
             Name = name;
             Population = population;
             Surface = surface;
+            Continent = continent;
             Cities = new HashSet<City>();
             Rivers = new HashSet<River>();
         }
