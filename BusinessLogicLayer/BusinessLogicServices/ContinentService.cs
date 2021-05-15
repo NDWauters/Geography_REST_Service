@@ -11,10 +11,12 @@ namespace BusinessLogicLayer.BusinessLogicServices
     public class ContinentService : IContinentService
     {
         private readonly ContinentRepo _continentRepo;
+        private readonly CountryRepo _countryRepo;
 
-        public ContinentService(ContinentRepo continentRepo)
+        public ContinentService(ContinentRepo continentRepo, CountryRepo countryRepo)
         {
             _continentRepo = continentRepo;
+            _countryRepo = countryRepo;
         }
 
         public IEnumerable<ContinentViewModel> GetAllContinents()
@@ -60,16 +62,28 @@ namespace BusinessLogicLayer.BusinessLogicServices
             {
                 throw new ContinentException("CreateContinent: Continent already exists.");
             }
+            
+            IList<Country> countries = new List<Country>();
 
-            var newID = _continentRepo.Add(new Continent
+            if (cModel.Countries != null && cModel.Countries.Count != 0)
             {
-                Name = cModel.Name
-            });
+                countries = _countryRepo
+                    .GetAll(cModel.Countries)
+                    .ToList();
+
+                if (countries.Count == 0)
+                {
+                    throw new ContinentException("CreateContinent: Not all given countries exist.");
+                }
+            }
+            
+            int newID = _continentRepo.Add(new Continent(cModel.Name, countries));
 
             return new ContinentViewModel
             {
                 ContinentID = newID.ToString(),
-                Name = cModel.Name
+                Name = cModel.Name,
+                Population = countries.Sum(x => x.Population)
             };
         }
 
@@ -86,14 +100,33 @@ namespace BusinessLogicLayer.BusinessLogicServices
             {
                 throw new ContinentException($"UpdateContinent: No Continent found with ID: {cModel.ContinentID}.");
             }
+            
+            IList<Country> countries = new List<Country>();
+
+            if (cModel.Countries != null && cModel.Countries.Count != 0)
+            {
+                countries = _countryRepo
+                    .GetAll(cModel.Countries)
+                    .ToList();
+
+                if (countries.Count == 0)
+                {
+                    throw new ContinentException("UpdateContinent: Not all given countries exist.");
+                }
+            }
 
             continent.Name = cModel.Name;
+            continent.Countries = countries;
 
             _continentRepo.Update(continent);
 
             return new ContinentViewModel
             {
-                Name = continent.Name
+                Name = continent.Name,
+                Population = countries.Sum(x => x.Population),
+                Countries = continent.Countries
+                    .Select(x => x.CountryID.ToString())
+                    .ToList()
             };
         }
 

@@ -10,12 +10,6 @@ namespace DataAccessLayer.Model
     {
         public Continent() { }
 
-        public Continent(string name)
-        {
-            Name = name;
-            Countries = new HashSet<Country>();
-        } 
-
         public Continent(string name, ICollection<Country> countries)
         {
             Name = name;

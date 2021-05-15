@@ -111,6 +111,12 @@ namespace Geography_REST_Service.Controllers
                     new { id = newID },
                     Request.Scheme);
 
+                newContinent.Countries = continent.Countries
+                    .Select(x => Url.Action("GetCountry", "Continent",
+                        new {continentID = newID, countryID = x},
+                        Request.Scheme))
+                    .ToList();
+
                 return CreatedAtAction(nameof(GetContinent), new { id = newID }, newContinent);
             }
             catch (Exception e)
@@ -145,6 +151,12 @@ namespace Geography_REST_Service.Controllers
                 updatedContinent.ContinentID = Url.Action("GetContinent", "Continent",
                     new { id }, 
                     Request.Scheme);
+
+                updatedContinent.Countries = updatedContinent.Countries
+                    .Select(x => Url.Action("GetCountry", "Continent",
+                        new { continentID = id, countryID = x },
+                        Request.Scheme))
+                    .ToList();
 
                 return CreatedAtAction(nameof(GetContinent), new { id }, updatedContinent);
             }
@@ -277,6 +289,16 @@ namespace Geography_REST_Service.Controllers
                     new { continentID, countryID = newID },
                     Request.Scheme);
 
+                newCountry.Cities = country.Cities.Select(x => Url.Action("GetCity", "Continent",
+                    new {continentID, countryID = newID, cityID = x},
+                    Request.Scheme))
+                    .ToList();
+
+                newCountry.Rivers = country.Rivers.Select(x => Url.Action("GetRiver", "River",
+                        new { id = x },
+                        Request.Scheme))
+                    .ToList();
+
                 return CreatedAtAction(nameof(GetCountry), new { continentID, countryID = newID }, newCountry);
             }
             catch (Exception e)
@@ -314,6 +336,16 @@ namespace Geography_REST_Service.Controllers
                 var updatedCountry = _countryService.UpdateCountry(country);
 
                 updatedCountry.CountryID = Url.Action("GetCountry", "Continent", new { continentID, countryID });
+
+                updatedCountry.Cities = country.Cities.Select(x => Url.Action("GetCity", "Continent",
+                        new { continentID, countryID, cityID = x },
+                        Request.Scheme))
+                    .ToList();
+
+                updatedCountry.Rivers = country.Rivers.Select(x => Url.Action("GetRiver", "River",
+                        new { id = x },
+                        Request.Scheme))
+                    .ToList();
 
                 return CreatedAtAction(nameof(GetCountry), new { continentID, countryID }, updatedCountry);
             }

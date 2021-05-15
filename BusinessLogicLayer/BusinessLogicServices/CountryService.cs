@@ -102,7 +102,7 @@ namespace BusinessLogicLayer.BusinessLogicServices
 
             if (continent == null)
             {
-                throw new CountryException("UpdateCountry: Continent doesn't exists.");
+                throw new CountryException("CreateCountry: Continent doesn't exists.");
             }
 
             IList<City> cities = new List<City>();
@@ -112,11 +112,21 @@ namespace BusinessLogicLayer.BusinessLogicServices
             if (cModel.Cities != null)
             {
                 cities = _cityRepo.GetAll(cModel.Cities).ToList();
+
+                if (cModel.Cities.Count > cities.Count)
+                {
+                    throw new CountryException("CreateCountry: Not all given cities exist");
+                }
             }
 
             if (cModel.Rivers != null)
             {
                 rivers = _riverRepo.GetAll(cModel.Rivers).ToList();
+
+                if (cModel.Rivers.Count > rivers.Count)
+                {
+                    throw new CountryException("CreateCountry: Not all given rivers exist");
+                }
             }
 
             if (cities.Count != 0 && rivers.Count == 0)
@@ -201,6 +211,11 @@ namespace BusinessLogicLayer.BusinessLogicServices
             {
                 cities = _cityRepo.GetAll(cModel.Cities).ToList();
 
+                if (cModel.Cities.Count > cities.Count)
+                {
+                    throw new CountryException("UpdateCountry: Not all given cities exist");
+                }
+
                 if (cities.Sum(x => x.Population) > cModel.Population)
                 {
                     throw new CountryException(
@@ -211,6 +226,11 @@ namespace BusinessLogicLayer.BusinessLogicServices
             if (cModel.Rivers != null)
             {
                 rivers = _riverRepo.GetAll(cModel.Rivers).ToList();
+
+                if (cModel.Rivers.Count > cities.Count)
+                {
+                    throw new CountryException("UpdateCountry: Not all given rivers exist");
+                }
             }
 
             country.Name = cModel.Name;
@@ -249,6 +269,11 @@ namespace BusinessLogicLayer.BusinessLogicServices
             if (country.Cities.Count != 0)
             {
                 throw new CountryException("RemoveCustomer: Cities not empty");
+            }
+
+            if (country.Rivers.Count != 0)
+            {
+                throw new CountryException("RemoveCustomer: Rivers not empty");
             }
 
             _countryRepo.Remove(id);
