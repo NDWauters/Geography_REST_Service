@@ -6,7 +6,7 @@ using DataAccessLayer.Model;
 
 namespace DataAccessLayer.Repositories
 {
-    public class CityRepo : IRepository<City>
+    public class CityRepo : ICityRepo
     {
         private readonly GeographyContext _db;
 

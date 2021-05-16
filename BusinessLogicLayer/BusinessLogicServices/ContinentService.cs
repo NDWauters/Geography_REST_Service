@@ -3,17 +3,17 @@ using System.Linq;
 using BusinessLogicLayer.Exceptions;
 using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.ViewModels.Continent;
+using DataAccessLayer.Interfaces;
 using DataAccessLayer.Model;
-using DataAccessLayer.Repositories;
 
 namespace BusinessLogicLayer.BusinessLogicServices
 {
     public class ContinentService : IContinentService
     {
-        private readonly ContinentRepo _continentRepo;
-        private readonly CountryRepo _countryRepo;
+        private readonly IContinentRepo _continentRepo;
+        private readonly ICountryRepo _countryRepo;
 
-        public ContinentService(ContinentRepo continentRepo, CountryRepo countryRepo)
+        public ContinentService(IContinentRepo continentRepo, ICountryRepo countryRepo)
         {
             _continentRepo = continentRepo;
             _countryRepo = countryRepo;

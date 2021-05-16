@@ -3,17 +3,17 @@ using System.Linq;
 using BusinessLogicLayer.Exceptions;
 using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.ViewModels.River;
+using DataAccessLayer.Interfaces;
 using DataAccessLayer.Model;
-using DataAccessLayer.Repositories;
 
 namespace BusinessLogicLayer.BusinessLogicServices
 {
     public class RiverService: IRiverService
     {
-        private readonly RiverRepo _riverRepo;
-        private readonly CountryRepo _countryRepo;
+        private readonly IRiverRepo _riverRepo;
+        private readonly ICountryRepo _countryRepo;
 
-        public RiverService(RiverRepo riverRepo, CountryRepo countryRepo)
+        public RiverService(IRiverRepo riverRepo, ICountryRepo countryRepo)
         {
             _riverRepo = riverRepo;
             _countryRepo = countryRepo;

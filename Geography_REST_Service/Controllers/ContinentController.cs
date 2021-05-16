@@ -7,6 +7,7 @@ using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.ViewModels.City;
 using BusinessLogicLayer.ViewModels.Continent;
 using BusinessLogicLayer.ViewModels.Country;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Geography_REST_Service.Controllers
 {
@@ -39,7 +40,7 @@ namespace Geography_REST_Service.Controllers
         {
             _logger.LogInformation(1,
                 $"{DateTime.Now.ToShortDateString()} - GET - " +
-                $"{Url.Action("GetAllContinents", "Continent", new {}, Request.Scheme)}");
+                $"{Url.Action("GetAllContinents", "Continent", new { }, Request.Scheme)}");
 
             var continents = _continentService.GetAllContinents().ToList();
 
@@ -425,7 +426,7 @@ namespace Geography_REST_Service.Controllers
                     new { continentID, city.CountryID },
                     Request.Scheme);
 
-                return city;
+                return Ok(city);
             }
             catch (Exception e)
             {

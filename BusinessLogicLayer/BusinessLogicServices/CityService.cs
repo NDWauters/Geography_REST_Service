@@ -3,20 +3,20 @@ using System.Linq;
 using BusinessLogicLayer.Exceptions;
 using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.ViewModels.City;
+using DataAccessLayer.Interfaces;
 using DataAccessLayer.Model;
-using DataAccessLayer.Repositories;
 
 namespace BusinessLogicLayer.BusinessLogicServices
 {
     public class CityService : ICityService
     {
-        private readonly CityRepo _cityRepo;
-        private readonly CountryRepo _countryRepo;
-        private readonly ContinentRepo _continentRepo;
+        private readonly ICityRepo _cityRepo;
+        private readonly ICountryRepo _countryRepo;
+        private readonly IContinentRepo _continentRepo;
 
-        public CityService(CityRepo cityRepo,
-            CountryRepo countryRepo,
-            ContinentRepo continentRepo)
+        public CityService(ICityRepo cityRepo,
+            ICountryRepo countryRepo,
+            IContinentRepo continentRepo)
         {
             _cityRepo = cityRepo;
             _countryRepo = countryRepo;

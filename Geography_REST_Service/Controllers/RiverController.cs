@@ -90,7 +90,7 @@ namespace Geography_REST_Service.Controllers
                         Request.Scheme))
                     .ToList();
 
-                return river;
+                return Ok(river);
             }
             catch (Exception e)
             {

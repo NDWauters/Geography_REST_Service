@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Repositories
 {
-    public class RiverRepo : IRepository<River>
+    public class RiverRepo : IRiverRepo
     {
         private readonly GeographyContext _db;
 
