@@ -95,6 +95,14 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new RiverException($"UpdateRiver: No river found with ID: {rModel.RiverID}.");
             }
 
+            if (river.Name != rModel.Name)
+            {
+                if (_riverRepo.Exists(rModel.Name))
+                {
+                    throw new RiverException("UpdateRiver: River with this name already exists.");
+                }
+            }
+
             var checkCountries = CheckCountries(rModel.Countries);
 
             if (!string.IsNullOrEmpty(checkCountries.Item1) && checkCountries.Item2 == null)

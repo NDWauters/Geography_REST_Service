@@ -36,16 +36,11 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 });
         }
 
-        public CityViewModel GetCity(int countryID, int cityID)
+        public CityViewModel GetCity(int cityID)
         {
             if (cityID <= 0)
             {
                 throw new CityException($"GetCity - city: {cityID} is an invalid ID.");
-            }
-
-            if (countryID <= 0)
-            {
-                throw new CityException($"GetCity - country: {countryID} is an invalid ID.");
             }
 
             var city = _cityRepo.Get(cityID);
@@ -53,18 +48,6 @@ namespace BusinessLogicLayer.BusinessLogicServices
             if (city == null)
             {
                 throw new CityException($"GetCity: No city found with ID: {cityID}.");
-            }
-
-            if (city.CountryID != countryID)
-            {
-                throw new CityException($"GetCity: this city isn't located in the given country");
-            }
-
-            var country = _countryRepo.Get(countryID);
-
-            if (country == null)
-            {
-                throw new CityException($"GetCity: No country found with ID: {countryID}.");
             }
 
             return new CityViewModel
@@ -143,6 +126,14 @@ namespace BusinessLogicLayer.BusinessLogicServices
             if (city == null)
             {
                 throw new CityException($"UpdateCity: No city found with ID: {cModel.CityID}.");
+            }
+
+            if (city.Name != cModel.Name)
+            {
+                if (_cityRepo.Exists(cModel.Name))
+                {
+                    throw new CityException("UpdateCity: City with this name already exists.");
+                }
             }
 
             city.Name = cModel.Name;

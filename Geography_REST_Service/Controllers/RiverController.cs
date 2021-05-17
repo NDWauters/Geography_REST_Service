@@ -30,7 +30,7 @@ namespace Geography_REST_Service.Controllers
         public IEnumerable<RiverViewModel> GetAllRivers()
         {
             _logger.LogInformation(
-                $"{DateTime.Now.ToShortDateString()} - GET - " +
+                $"{DateTime.Now} - GET - " +
                 $"{Url.Action("GetAllRivers", "River", new { }, Request.Scheme)}");
 
             var rivers = _riverService.GetAllRivers().ToList();
@@ -66,7 +66,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(
-                    $"{DateTime.Now.ToShortDateString()} - GET - " +
+                    $"{DateTime.Now} - GET - " +
                     $"{Url.Action("GetRiver", "River", new { id }, Request.Scheme)}");
 
                 var river = _riverService.GetRiver(id);
@@ -107,7 +107,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(
-                    $"{DateTime.Now.ToShortDateString()} - POST - " +
+                    $"{DateTime.Now} - POST - " +
                     $"{Url.Action("Post", "River", new { }, Request.Scheme)}");
 
                 if (!ModelState.IsValid)
@@ -151,7 +151,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(
-                    $"{DateTime.Now.ToShortDateString()} - PUT - " +
+                    $"{DateTime.Now} - PUT - " +
                     $"{Url.Action("Put", "River", new { id }, Request.Scheme)}");
 
                 if (river.RiverID != id)
@@ -199,7 +199,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(
-                    $"{DateTime.Now.ToShortDateString()} - DELETE - " +
+                    $"{DateTime.Now} - DELETE - " +
                     $"{Url.Action("DeleteRiver", "River", new { id }, Request.Scheme)}");
 
                 _riverService.RemoveRiver(id);

@@ -100,6 +100,14 @@ namespace BusinessLogicLayer.BusinessLogicServices
             {
                 throw new ContinentException($"UpdateContinent: No Continent found with ID: {cModel.ContinentID}.");
             }
+
+            if (cModel.Name != continent.Name)
+            {
+                if (_continentRepo.Exists(cModel.Name))
+                {
+                    throw new ContinentException("UpdateContinent: Continent with this name already exists");
+                }
+            }
             
             IList<Country> countries = new List<Country>();
 

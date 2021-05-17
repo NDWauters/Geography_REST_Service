@@ -2,5 +2,8 @@
 
 namespace DataAccessLayer.Interfaces
 {
-    public interface ICountryRepo : IRepository<Country> { }
+    public interface ICountryRepo : IRepository<Country>
+    {
+        bool Exists(int id, string name);
+    }
 }

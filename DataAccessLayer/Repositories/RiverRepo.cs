@@ -56,6 +56,9 @@ namespace DataAccessLayer.Repositories
 
             riverDb.Name = river.Name;
             riverDb.Countries = river.Countries;
+
+            _db.Rivers.Update(riverDb);
+            _db.SaveChanges();
         }
 
         public bool Exists(string name)

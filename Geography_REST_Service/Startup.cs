@@ -40,7 +40,6 @@ namespace Geography_REST_Service
             services.AddScoped<ICityRepo,CityRepo>();
 
             services.AddSingleton<GeographyContext>();
-            services.AddSingleton<ILogger>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

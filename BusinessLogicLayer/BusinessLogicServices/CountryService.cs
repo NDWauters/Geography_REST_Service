@@ -93,7 +93,7 @@ namespace BusinessLogicLayer.BusinessLogicServices
                 throw new CountryException("CreateCountry: population of country is null or lower.");
             }
 
-            if (_countryRepo.Exists(cModel.Name))
+            if (_countryRepo.Exists(cModel.ContinentID, cModel.Name))
             {
                 throw new CountryException("CreateCountry: Country already exists.");
             }
@@ -202,6 +202,16 @@ namespace BusinessLogicLayer.BusinessLogicServices
             if (country == null)
             {
                 throw new CountryException($"UpdateCountry: No country found with ID: {cModel.CountryID}.");
+            }
+
+            if (cModel.Name != country.Name || 
+                (cModel.ContinentID != country.ContinentID && cModel.Name == country.Name))
+            {
+                if (_countryRepo.Exists(cModel.ContinentID, cModel.Name))
+                {
+                    throw new CountryException(
+                        "UpdateCountry: Country with this name already exists in this continent.");
+                }
             }
 
             IList<City> cities = new List<City>();

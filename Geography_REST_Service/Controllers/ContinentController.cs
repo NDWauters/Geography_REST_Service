@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Geography_REST_Service.Controllers
 {
-    //NOG BEKIJKEN: CONTROLE OP UNIEK ZIJN IN CREATE EN UPDATE
     [ApiController]
     [Route("api/[controller]")]
     public class ContinentController : ControllerBase
@@ -39,7 +38,7 @@ namespace Geography_REST_Service.Controllers
         public IEnumerable<ContinentViewModel> GetAllContinents()
         {
             _logger.LogInformation(1,
-                $"{DateTime.Now.ToShortDateString()} - GET - " +
+                $"{DateTime.Now} - GET - " +
                 $"{Url.Action("GetAllContinents", "Continent", new { }, Request.Scheme)}");
 
             var continents = _continentService.GetAllContinents().ToList();
@@ -66,7 +65,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(2,
-                    $"{DateTime.Now.ToShortDateString()} - GET - " +
+                    $"{DateTime.Now} - GET - " +
                     $"{Url.Action("GetContinent", "Continent", new { id }, Request.Scheme)}");
 
                 var continent = _continentService.GetContinent(id);
@@ -98,7 +97,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(3,
-                    $"{DateTime.Now.ToShortDateString()} - POST - " +
+                    $"{DateTime.Now} - POST - " +
                     $"{Url.Action("PostContinent", "Continent", new {}, Request.Scheme)}");
 
                 if (!ModelState.IsValid)
@@ -135,7 +134,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(4,
-                    $"{DateTime.Now.ToShortDateString()} - PUT - " +
+                    $"{DateTime.Now} - PUT - " +
                     $"{Url.Action("PutContinent", "Continent", new { id }, Request.Scheme)}");
 
                 if (continent.ContinentID != id)
@@ -176,7 +175,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(5,
-                    $"{DateTime.Now.ToShortDateString()} - DELETE - " +
+                    $"{DateTime.Now} - DELETE - " +
                     $"{Url.Action("DeleteContinent", "Continent", new { id }, Request.Scheme)}");
 
                 _continentService.RemoveContinent(id);
@@ -199,7 +198,7 @@ namespace Geography_REST_Service.Controllers
         public IEnumerable<CountryViewModel> GetAllCountries()
         {
             _logger.LogInformation(1,
-                $"{DateTime.Now.ToShortDateString()} - GET - " +
+                $"{DateTime.Now} - GET - " +
                 $"{Url.Action("GetAllCountries", "Continent", new {}, Request.Scheme)}");
 
             var countries = _countryService.GetAllCountries().ToList();
@@ -233,7 +232,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(2,
-                    $"{DateTime.Now.ToShortDateString()} - GET - " +
+                    $"{DateTime.Now} - GET - " +
                     $"{Url.Action("GetCountry", "Continent", new { countryID }, Request.Scheme)}");
 
                 var country = _countryService.GetCountry(countryID);
@@ -270,7 +269,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(3,
-                    $"{DateTime.Now.ToShortDateString()} - POST - " +
+                    $"{DateTime.Now} - POST - " +
                     $"{Url.Action("PostCountry", "Continent", new { continentID }, Request.Scheme)}");
 
                 if (continentID != country.ContinentID)
@@ -317,7 +316,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(4,
-                    $"{DateTime.Now.ToShortDateString()} - PUT - " +
+                    $"{DateTime.Now} - PUT - " +
                     $"{Url.Action("PutCountry", "Continent", new { continentID, countryID }, Request.Scheme)}");
 
                 if (country.CountryID != countryID)
@@ -337,7 +336,7 @@ namespace Geography_REST_Service.Controllers
 
                 var updatedCountry = _countryService.UpdateCountry(country);
 
-                updatedCountry.CountryID = Url.Action("GetCountry", "Continent", new { continentID, countryID });
+                updatedCountry.CountryID = Url.Action("GetCountry", "Continent", new { continentID, countryID }, Request.Scheme);
 
                 updatedCountry.Cities = country.Cities.Select(x => Url.Action("GetCity", "Continent",
                         new { continentID, countryID, cityID = x },
@@ -365,7 +364,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(5,
-                    $"{DateTime.Now.ToShortDateString()} - DELETE - " +
+                    $"{DateTime.Now} - DELETE - " +
                     $"{Url.Action("DeleteCountry", "Continent", new { countryID }, Request.Scheme)}");
 
                 _countryService.RemoveCountry(countryID);
@@ -388,7 +387,7 @@ namespace Geography_REST_Service.Controllers
         public IEnumerable<CityViewModel> GetAllCities(int continentID)
         {
             _logger.LogInformation(1,
-                $"{DateTime.Now.ToShortDateString()} - GET - " +
+                $"{DateTime.Now} - GET - " +
                 $"{Url.Action("GetAllCities", "Continent", new { }, Request.Scheme)}");
 
             var cities = _cityService.GetAllCities().ToList();
@@ -413,10 +412,10 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(2,
-                    $"{DateTime.Now.ToShortDateString()} - GET - " +
+                    $"{DateTime.Now} - GET - " +
                     $"{Url.Action("GetCity", "Continent", new { continentID, countryID, cityID }, Request.Scheme)}");
 
-                var city = _cityService.GetCity(countryID, cityID);
+                var city = _cityService.GetCity(cityID);
 
                 city.CityID = Url.Action("GetCity", "Continent",
                     new { countryID, city.CityID },
@@ -443,7 +442,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(3,
-                    $"{DateTime.Now.ToShortDateString()} - POST - " +
+                    $"{DateTime.Now} - POST - " +
                     $"{Url.Action("PostCity", "Continent", new { continentID, countryID }, Request.Scheme)}");
 
                 if (countryID != city.CountryID)
@@ -484,7 +483,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(4,
-                    $"{DateTime.Now.ToShortDateString()} - PUT - " +
+                    $"{DateTime.Now} - PUT - " +
                     $"{Url.Action("PutCity", "Continent", new { continentID, countryID, cityID }, Request.Scheme)}");
 
                 if (city.CityID != cityID)
@@ -528,7 +527,7 @@ namespace Geography_REST_Service.Controllers
             try
             {
                 _logger.LogInformation(5,
-                    $"{DateTime.Now.ToShortDateString()} - DELETE - " +
+                    $"{DateTime.Now} - DELETE - " +
                     $"{Url.Action("DeleteCity", "Continent", new { cityID }, Request.Scheme)}");
 
                 _cityService.RemoveCity(cityID);
